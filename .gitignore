@@ -1,0 +1,9 @@
+# Logs
+*.log
+
+# PowerShell history
+*.ps1history
+
+# OS files
+Thumbs.db
+.DS_Store
