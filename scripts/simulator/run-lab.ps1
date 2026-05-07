@@ -1,7 +1,6 @@
 Write-Host "🚀 Starting Enterprise Lab..." -ForegroundColor Cyan
 Write-Host "-------------------------------------"
 
-# Always resolve from current script location (fixes your path issues)
 $simPath = $PSScriptRoot
 
 # -------------------------------

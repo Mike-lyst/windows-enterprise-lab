@@ -7,7 +7,7 @@ Write-Output "-------------------------------------"
 # -----------------------------
 $simPath = "C:\Dev\windows-enterprise-lab\scripts\simulator"
 $logPath = "C:\Dev\windows-enterprise-lab\scripts\reports\access-log.txt"
-
+}
 # Ensure log directory exists
 $logDir = Split-Path $logPath
 if (!(Test-Path $logDir)) {
@@ -35,6 +35,7 @@ $global:ServiceStatus = @{
     "AuthService" = "STOPPED"
 }
 
+}
 function Write-Log {
     param(
         [string]$User,
@@ -58,7 +59,16 @@ function Test-Login {
     )
 
     Write-Output "`n🔍 Login Attempt → $User"
+# ---------------- GPO CHECK ----------------
 
+if ($global:GPO["DenyLogon"] -contains $role) {
+
+    Write-Output "❌ LOGIN FAILED → GPO restriction"
+
+    Write-Log "LOGIN BLOCKED BY GPO → $User"
+
+    return
+}
     # User validation
     if (-not $global:RBAC.ContainsKey($User)) {
         Write-Output "❌ LOGIN FAILED → User not found"
@@ -95,8 +105,8 @@ Write-Output "`n🧪 STEP 1: Initial system failure (AuthService down)"
 
 Test-Login "user3"
 Test-Login "user5"
-Test-Login "user8"
-Test-Login "user12"
+Test-Login "user13"
+Test-Login "user10"
 Test-Login "user17"
 
 Write-Output "`n🛠 STEP 2: Fix service (AuthService restarted)"
@@ -106,8 +116,8 @@ Write-Output "`n🧪 STEP 3: Retesting all users after service recovery"
 
 Test-Login "user3"
 Test-Login "user5"
-Test-Login "user8"
-Test-Login "user12"
+Test-Login "user13"
+Test-Login "user10"
 Test-Login "user17"
 
 Write-Output "`n🛠 STEP 4: Fix account issue for user2"
@@ -117,8 +127,8 @@ Write-Output "`n🧪 STEP 5: Final validation"
 
 Test-Login "user3"
 Test-Login "user5"
-Test-Login "user8"
-Test-Login "user12"
+Test-Login "user13"
+Test-Login "user1"
 Test-Login "user17"
 
 # -----------------------------
